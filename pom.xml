@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.xiafei</groupId>
+    <artifactId>dubbo-learn</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <modules>
+        <module>dubbo-learn-consumer</module>
+        <module>dubbo-learn-provider</module>
+        <module>dubbo-learn-sdk</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>dubbo-learn</name>
+    <description>dubbo学习</description>
+
+    <properties>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring.boot.version>2.1.0.RELEASE</spring.boot.version>
+        <!-- 插件管理 start -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <plugin.maven.compiler.version>3.3</plugin.maven.compiler.version>
+        <plugin.maven.deploy.version>2.8.2</plugin.maven.deploy.version>
+        <plugin.maven.resources.version>3.0.2</plugin.maven.resources.version>
+        <plugin.maven.javadoc.version>3.0.0-M1</plugin.maven.javadoc.version>
+        <plugin.maven.source.version>3.0.1</plugin.maven.source.version>
+        <!-- 插件管理 end -->
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.xiafei</groupId>
+                <artifactId>dubbo-learn-consumer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xiafei</groupId>
+                <artifactId>dubbo-learn-provider</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xiafei</groupId>
+                <artifactId>dubbo-learn-sdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+
+        <pluginManagement>
+            <plugins>
+                <!-- springBoot插件，在Application.java 所在模块中显示添加-->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                    <configuration>
+                        <mainClass>com.virgo.finance.fm.biz.web.Application</mainClass>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>springloaded</artifactId>
+                            <version>1.2.5.RELEASE</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <!-- Maven默认安装的插件，这里只是修改一些默认属性，和声明版本，子pom不需要声明 start -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${plugin.maven.compiler.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <!-- 指定编码格式，否则在DOS下运行mvn compile命令时会默认使用GBK编码 -->
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${plugin.maven.deploy.version}</version>
+                    <configuration>
+                        <!-- deploy 时是否跳过模块 -->
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${plugin.maven.resources.version}</version>
+                    <configuration>
+                        <!-- 指定编码格式，否则在DOS下运行mvn compile命令时会默认使用GBK编码 -->
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <!-- Maven默认安装的插件，这里只是修改一些默认属性，和声明版本，子pom不需要声明 end -->
+
+                <!-- 发布doc 如果需要生成javadoc，子pom是需要在<build></build>中显示添加声明的，不过不需要指定版本号及配置，
+                和dependency一样 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${plugin.maven.javadoc.version}</version>
+                    <configuration>
+                        <charset>${project.build.sourceEncoding}</charset>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <docencoding>${project.build.sourceEncoding}</docencoding>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- 发布源码 如果需要deploy时将源码发布到私服，子pom需要显示声明 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${plugin.maven.source.version}</version>
+                    <configuration>
+                        <attach>true</attach>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+
+</project>
